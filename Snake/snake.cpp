@@ -4,6 +4,7 @@
 #include <QTimer>
 
 #include "snake.h"
+#include "python.h"
 
 Snake::Snake(QWidget *parent)
     : QWidget(parent)
@@ -11,8 +12,13 @@ Snake::Snake(QWidget *parent)
     setStyleSheet({"background-color:rgb(0, 30, 10);"
 
                   });
-    angle = dir_right;
+
     inGame = true;
+
+    m_python = new python(QPoint(100,100));
+
+
+    m_python->count;
 
     resize(B_WIDTH, B_HEIGHT);
     loadImages();
@@ -21,209 +27,153 @@ Snake::Snake(QWidget *parent)
 
 Snake::~Snake()
 {
+    if(m_python) delete m_python;
+    timer->stop();
     delete timer;
 }
 
 void Snake::loadImages() {
 
-    dot.load(":/res/images/dot_10.png");
-    head.load(":/res/images/head_10.png");
     apple.load(":/res/images/apple_10.png");
 }
 
 void Snake::initGame() {
 
-    dots = 3;
+     locateApple();
 
-    for (int z = 0; z < dots; z++) {
-        x[z] = 50 - z * 10;
-        y[z] = 50;
-    }
+     #ifdef TIMER_LOOP
+     timer = new QTimer(this);
+     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
+     timer->start(m_python->speed);
+     #else
+     timerId = startTimer(DELAY);
+     #endif
 
-    locateApple();
+ }
 
-    #ifdef TIMER_LOOP
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
-    timer->start(DELAY);
-    #else
-    timerId = startTimer(DELAY);
-    #endif
+ void Snake::paintEvent(QPaintEvent *e) {
 
-}
+     Q_UNUSED(e);
 
-void Snake::paintEvent(QPaintEvent *e) {
+     doDrawing();
+ }
 
-    Q_UNUSED(e);
+ void Snake::doDrawing() {
 
-    doDrawing();
-}
+     QPainter qp(this);
 
-void Snake::doDrawing() {
+     if (inGame) {
 
-    QPainter qp(this);
+         qp.drawImage(pos_apple.x(), pos_apple.y(), apple);
 
-    if (inGame) {
+         m_python->draw(qp);
 
-        qp.drawImage(apple_x, apple_y, apple);
+         if (Pause) {
+             outText(qp, "Pause");
+         }
 
-        for (int z = 0; z < dots; z++) {
-            if (z == 0) {
-                qp.drawImage(x[z], y[z], head);
-            } else {
-                qp.drawImage(x[z], y[z], dot);
-            }
-        }
+     } else {
 
-        if (Pause) {
-            outText(qp, "Pause");
+         gameOver(qp);
+     }
+ }
 
-        }
+ void Snake::gameOver(QPainter &qp) {
+     outText(qp, "Game over");
+ }
 
-    } else {
+ void Snake::outText(QPainter &qp, QString text)
+ {
+     QFont font("Courier", 15, QFont::DemiBold);
+     QFontMetrics fm(font);
+     int textWidth = fm.width(text);
 
-        gameOver(qp);
-    }
-}
+     qp.setPen(QColor(Qt::white));
+     qp.setFont(font);
+     int h = height();
+     int w = width();
 
-void Snake::gameOver(QPainter &qp) {   
-    outText(qp, "Game over");
-}
+     qp.translate(QPoint(w/2, h/2));
+     qp.drawText(-textWidth/2, 0, text);
+ }
 
-void Snake::outText(QPainter &qp, QString text)
-{
-    QFont font("Courier", 15, QFont::DemiBold);
-    QFontMetrics fm(font);
-    int textWidth = fm.width(text);
+ void Snake::updateTime()
+ {
+     if(!Pause){
+         if (inGame) {
 
-    qp.setPen(QColor(Qt::white));
-    qp.setFont(font);
-    int h = height();
-    int w = width();
-
-    qp.translate(QPoint(w/2, h/2));
-    qp.drawText(-textWidth/2, 0, text);
-}
-
-void Snake::updateTime()
-{
-    if(!Pause){
-        if (inGame) {
-
-            checkApple();
-            checkCollision();
-            move();
-        }
+             checkApple();
+             checkCollision();
+             move();
+         }
 
 
-    }
-    repaint();
+     }
+     repaint();
 
-}
+ }
 
-void Snake::checkApple() {
+ void Snake::checkApple() {
 
-    if ((x[0] == apple_x) && (y[0] == apple_y)) {
+     if ((m_python->pos.x() == pos_apple.x()) && (m_python->pos.y() == pos_apple.y())) {
 
-        dots++;
-        locateApple();
-    }
-}
+         m_python->points.push_back(m_python->points.back());
+         locateApple();
+     }
+ }
 
-void Snake::move() {
+ void Snake::move() {
+    m_python->move(B_HEIGHT, B_WIDTH, wall);
 
-    for (int z = dots; z > 0; z--) {
-        x[z] = x[(z - 1)];
-        y[z] = y[(z - 1)];
-    }
+ }
 
-    if (angle == dir_left) {
-        x[0] -= DOT_SIZE;
-    }
+ void Snake::checkCollision() {
 
-    if (angle == dir_right) {
-        x[0] += DOT_SIZE;
-    }
+     inGame = m_python->checkCollision(B_HEIGHT, B_WIDTH, m_python->points);
 
-    if (angle == dir_up) {
-        y[0] -= DOT_SIZE;
-    }
+     if(!inGame) {
+         killTimer(timerId);
+     }
+ }
 
-    if (angle == dir_down) {
-        y[0] += DOT_SIZE;
-    }
-}
+ void Snake::locateApple() {
 
-void Snake::checkCollision() {
+     QTime time = QTime::currentTime();
+     qsrand((uint) time.msec());
 
-    for (int z = dots; z > 0; z--) {
+     int r = qrand() % RAND_POS;
+     pos_apple.setX(r * APPLE_SIZE);
 
-        if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
-            inGame = false;
-        }
-    }
+     r = qrand() % RAND_POS;
+     pos_apple.setY(r * APPLE_SIZE);
+ }
 
-    if ((y[0] >= B_HEIGHT)||(y[0] < 0)||(x[0] >= B_WIDTH)||(x[0] < 0))
-    {
-        inGame = false;
-    }
+ void Snake::timerEvent(QTimerEvent *e) {
 
-    if(!inGame) {
-        killTimer(timerId);
-    }
-}
+     Q_UNUSED(e);
+     #ifndef TIMER_LOOP
+     if (inGame) {
 
-void Snake::locateApple() {
+         checkApple();
+         checkCollision();
+         move();
+     }
 
-    QTime time = QTime::currentTime();
-    qsrand((uint) time.msec());
+     repaint();
+     #endif
+ }
 
-    int r = qrand() % RAND_POS;
-    apple_x = (r * DOT_SIZE);
+ void Snake::keyPressEvent(QKeyEvent *e) {
 
-    r = qrand() % RAND_POS;
-    apple_y = (r * DOT_SIZE);
-}
+     int key = e->key();
+     QPainter qp(this);
 
-void Snake::timerEvent(QTimerEvent *e) {
+     m_python->action_angle(key);
 
-    Q_UNUSED(e);
-    #ifndef TIMER_LOOP
-    if (inGame) {
+     if (key == Qt::Key_Pause) {
 
-        checkApple();
-        checkCollision();
-        move();
-    }
+         Pause ^= true;
+     }
 
-    repaint();
-    #endif
-}
-
-void Snake::keyPressEvent(QKeyEvent *e) {
-
-    int key = e->key();
-    QPainter qp(this);
-
-    if ((key == Qt::Key_Left) && (angle != dir_right)) {
-        angle = dir_left;
-    }
-
-    if ((key == Qt::Key_Right) && (angle != dir_left)) {
-        angle = dir_right;
-    }
-
-    if ((key == Qt::Key_Up) && (angle != dir_down)) {
-        angle = dir_up;
-    }
-
-    if ((key == Qt::Key_Down) && (angle != dir_up)) {
-        angle = dir_down;
-    }
-    if (key == Qt::Key_Pause) {
-
-        Pause ^= true;
-    }
-
-    QWidget::keyPressEvent(e);
-}
+     QWidget::keyPressEvent(e);
+ }

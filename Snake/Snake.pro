@@ -9,15 +9,22 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    include/animal.cpp \
+    include/python.cpp \
     main.cpp \
     snake.cpp
 
 HEADERS += \
+    include/animal.h \
+    include/python.h \
     snake.h
 
 RESOURCES += \
     Res.qrc
+    # Includes =====================================================================
 
+    INCLUDEPATH += \
+        $${PWD}/include \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

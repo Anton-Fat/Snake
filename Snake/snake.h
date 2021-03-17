@@ -6,6 +6,11 @@
 
 #define TIMER_LOOP
 
+//==============================================================================
+
+class python;
+
+//==============================================================================
 
 
 class Snake : public QWidget
@@ -22,38 +27,26 @@ protected:
       void keyPressEvent(QKeyEvent *);
 
 private:
-    QImage dot;
-    QImage head;
     QImage apple;
 
     QTimer *timer;
 
-    enum Direction
-    {
-        dir_right = 0,
-        dir_up = 90,
-        dir_left = 180,
-        dir_down = 270,
-    };
 
     bool Pause {false};
 
+    python *m_python {nullptr};
+
+    bool wall = false;
+
     static const int B_WIDTH = 300;
     static const int B_HEIGHT = 300;
-    static const int DOT_SIZE = 10;
-    static const int ALL_DOTS = 900;
+
     static const int RAND_POS = 29;
-    static const int DELAY = 200; //140;
+    static const int APPLE_SIZE = 10;
 
     int timerId;
-    int dots;
-    int apple_x;
-    int apple_y;
 
-    int x[ALL_DOTS];
-    int y[ALL_DOTS];
-
-    Direction angle;
+    QPoint pos_apple;
 
     bool inGame;
 
