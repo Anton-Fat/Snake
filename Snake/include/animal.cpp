@@ -2,6 +2,8 @@
 
 using namespace std;
 
+int animal::count = 0;
+
 animal::animal(QPoint pos)
 {
     this->pos = pos;
@@ -10,6 +12,11 @@ animal::animal(QPoint pos)
 int animal::getDotSize()
 {
     return dot_size;
+}
+
+int animal::getDistanse(float scale)
+{
+    return getDotSize()*scale;
 }
 
 void animal::action_angle(int key)
@@ -32,7 +39,7 @@ void animal::action_angle(int key)
     }
 
 }
-bool animal::checkCollision(int height, int width, const vector<QPoint> &points)
+bool animal::checkCollision(QSize size, const vector<QPoint> &points)
 {
     for (int z = points.size()-1; z > 0; z--) {
 
@@ -41,7 +48,7 @@ bool animal::checkCollision(int height, int width, const vector<QPoint> &points)
         }
     }
 
-    if ((pos.y() >= height)||(pos.y() < 0)||(pos.x() >= width)||(pos.x() < 0))
+    if ((pos.y() >= size.height())||(pos.y() < 0)||(pos.x() >= size.width())||(pos.x() < 0))
     {
         return false;
     }

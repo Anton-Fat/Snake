@@ -9,7 +9,7 @@ class animal
 
 public:
 
-    static unsigned int count;
+    static int count;
 
     animal(QPoint pos);
 
@@ -18,8 +18,9 @@ public:
     QPoint pos;
 
     int getDotSize(void);
+    int getDistanse(float scale);
     void action_angle(int key);
-    bool checkCollision(int height, int width, const std::vector<QPoint> &points);
+    bool checkCollision(QSize size, const std::vector<QPoint> &points);
 
 
 protected:
@@ -37,6 +38,7 @@ private:
 
 
     int dot_size {10};
+    int distanse {0};
 
 };
 

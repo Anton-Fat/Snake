@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QKeyEvent>
 
+#include "include/map.h"
+
 #define TIMER_LOOP
 
 //==============================================================================
@@ -21,12 +23,24 @@ public:
     Snake(QWidget *parent = nullptr);
     ~Snake();
 
+
+
+    //int fps = 10;
+    int getFps() { return fps; }
+
 protected:
       void paintEvent(QPaintEvent *);
       void timerEvent(QTimerEvent *);
       void keyPressEvent(QKeyEvent *);
 
 private:
+
+    static int fps;
+    static const int max_count_python {10};
+
+    int period = 1000 / fps;
+
+
     QImage apple;
 
     QTimer *timer;
@@ -35,16 +49,18 @@ private:
     bool Pause {false};
 
     python *m_python {nullptr};
+    python *m_python_test {nullptr};
+
+    python *m_python_t[max_count_python]; // 444
 
     bool wall = false;
 
-    static const int B_WIDTH = 300;
-    static const int B_HEIGHT = 300;
+    Map *m_map {nullptr};
+
 
     static const int RAND_POS = 29;
     static const int APPLE_SIZE = 10;
 
-    int timerId;
 
     QPoint pos_apple;
 

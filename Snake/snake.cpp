@@ -3,8 +3,16 @@
 
 #include <QTimer>
 
+#include <math.h>
+
 #include "snake.h"
 #include "python.h"
+
+
+/// \todo delete
+#include <QDebug>
+
+int Snake::fps = 50;
 
 Snake::Snake(QWidget *parent)
     : QWidget(parent)
@@ -13,14 +21,31 @@ Snake::Snake(QWidget *parent)
 
                   });
 
+    m_map = new Map();
+
     inGame = true;
+    for(int i = 0; i < max_count_python; ++i) {
+        m_python_t[i] = nullptr;
+    }
 
     m_python = new python(QPoint(100,100));
 
+    m_python_t[0] = m_python;
 
-    m_python->count;
+    m_python->speed = 10;
 
-    resize(B_WIDTH, B_HEIGHT);
+    m_python_test = new python(QPoint(200,200));
+
+    m_python_t[1] = m_python_test;
+
+    m_python_test->speed = 20;
+
+    qDebug() << "Count python : " << python::count;
+
+    qDebug() << "test " << round(2.4);
+    qDebug() << "test " << round(2.6);
+
+    resize(m_map->getSize());
     loadImages();
     initGame();
 }
@@ -28,6 +53,8 @@ Snake::Snake(QWidget *parent)
 Snake::~Snake()
 {
     if(m_python) delete m_python;
+
+    if(m_python_test) delete m_python_test;
     timer->stop();
     delete timer;
 }
@@ -41,13 +68,12 @@ void Snake::initGame() {
 
      locateApple();
 
-     #ifdef TIMER_LOOP
+
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
-     timer->start(m_python->speed);
-     #else
-     timerId = startTimer(DELAY);
-     #endif
+     timer->start(period); // speed
+     qDebug() << "period = " << period;
+
 
  }
 
@@ -66,7 +92,13 @@ void Snake::initGame() {
 
          qp.drawImage(pos_apple.x(), pos_apple.y(), apple);
 
-         m_python->draw(qp);
+
+         for(int i = 0; i < python::count; ++i) {
+             m_python_t[i]->draw(qp);
+         }
+
+         //m_python->draw(qp);
+         //m_python_test->draw(qp);
 
          if (Pause) {
              outText(qp, "Pause");
@@ -99,12 +131,18 @@ void Snake::initGame() {
 
  void Snake::updateTime()
  {
+     static int delay;
      if(!Pause){
-         if (inGame) {
 
-             checkApple();
-             checkCollision();
-             move();
+         delay++;
+         if (delay%10 == 0) {
+
+             if (inGame) {
+
+                 checkApple();
+                 checkCollision();
+                 move();
+             }
          }
 
 
@@ -123,35 +161,39 @@ void Snake::initGame() {
  }
 
  void Snake::move() {
-    m_python->move(B_HEIGHT, B_WIDTH, wall);
 
+     for(int i = 0; i < python::count; ++i) {
+         m_python_t[i]->move(m_map->getSize(), wall, period);
+     }
  }
 
  void Snake::checkCollision() {
 
-     inGame = m_python->checkCollision(B_HEIGHT, B_WIDTH, m_python->points);
+     inGame = m_python->checkCollision(m_map->getSize(), m_python->points);
 
      if(!inGame) {
-         killTimer(timerId);
+         ;
      }
  }
 
  void Snake::locateApple() {
 
+     QSize map = m_map->getCountPoints();
+
      QTime time = QTime::currentTime();
      qsrand((uint) time.msec());
 
-     int r = qrand() % RAND_POS;
-     pos_apple.setX(r * APPLE_SIZE);
+     int r = qrand() % map.width();
+     pos_apple.setX(r * m_map->grid); // APPLE_SIZE
 
-     r = qrand() % RAND_POS;
-     pos_apple.setY(r * APPLE_SIZE);
+     r = qrand() % map.height();
+     pos_apple.setY(r * m_map->grid);
  }
 
  void Snake::timerEvent(QTimerEvent *e) {
 
      Q_UNUSED(e);
-     #ifndef TIMER_LOOP
+
      if (inGame) {
 
          checkApple();
@@ -160,7 +202,7 @@ void Snake::initGame() {
      }
 
      repaint();
-     #endif
+
  }
 
  void Snake::keyPressEvent(QKeyEvent *e) {
@@ -170,10 +212,16 @@ void Snake::initGame() {
 
      m_python->action_angle(key);
 
-     if (key == Qt::Key_Pause) {
+     switch (e->key()) {
+     case Qt::Key_Pause:
+     case Qt::Key_P:
 
          Pause ^= true;
-     }
+         break;
 
-     QWidget::keyPressEvent(e);
+
+
+     default:
+         QWidget::keyPressEvent(e);
+     }
  }

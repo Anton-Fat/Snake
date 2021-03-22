@@ -18,6 +18,7 @@ private:
     static const int all_dots {900};
     QImage dot;
     QImage head;
+    int dotss {3};
 
 public:
 
@@ -25,10 +26,10 @@ public:
 
     vector<QPoint> points;
 
-    int dotss {3};
 
 
-    void move(int height, int width, bool wall);
+
+    void move(QSize size, bool wall, int dtime);
 
     int getAllDots(void);
     void draw(QPainter &qp);

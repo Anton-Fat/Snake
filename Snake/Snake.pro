@@ -10,12 +10,14 @@ CONFIG += c++11
 
 SOURCES += \
     include/animal.cpp \
+    include/map.cpp \
     include/python.cpp \
     main.cpp \
     snake.cpp
 
 HEADERS += \
     include/animal.h \
+    include/map.h \
     include/python.h \
     snake.h
 
