@@ -58,7 +58,7 @@ private:
     Map *m_map {nullptr};
 
 
-    static const int RAND_POS = 29;
+
     static const int APPLE_SIZE = 10;
 
 

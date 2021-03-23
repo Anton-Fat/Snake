@@ -26,7 +26,8 @@ public:
 
     vector<QPoint> points;
 
-
+    vector<QPoint> pointsPath;
+    vector<bool>   pointsPos;
 
 
     void move(QSize size, bool wall, int dtime);

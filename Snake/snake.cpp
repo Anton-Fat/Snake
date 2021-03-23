@@ -32,13 +32,13 @@ Snake::Snake(QWidget *parent)
 
     m_python_t[0] = m_python;
 
-    m_python->speed = 10;
+    m_python->speed = 250;
 
     m_python_test = new python(QPoint(200,200));
 
     m_python_t[1] = m_python_test;
 
-    m_python_test->speed = 20;
+    m_python_test->speed = 500;
 
     qDebug() << "Count python : " << python::count;
 
@@ -53,6 +53,8 @@ Snake::Snake(QWidget *parent)
 Snake::~Snake()
 {
     if(m_python) delete m_python;
+
+
 
     if(m_python_test) delete m_python_test;
     timer->stop();
@@ -135,13 +137,14 @@ void Snake::initGame() {
      if(!Pause){
 
          delay++;
-         if (delay%10 == 0) {
+         if (delay% 2 == 0) {
 
              if (inGame) {
 
+                 move();
                  checkApple();
                  checkCollision();
-                 move();
+
              }
          }
 
