@@ -15,6 +15,7 @@ python::python(QPoint pos):animal(pos)
     for (int z = 0; z < dotss; z++) {
         pointsReal.push_back(QPoint(pos.x() - z * getDotSize(),
                                 pos.y()));
+        pointsPath.Path.push_back(pointsReal.);
     }
 
     dot.load(":/res/images/dot_10.png");

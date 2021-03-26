@@ -158,7 +158,7 @@ void Snake::initGame() {
 
      if ((m_python->pos.x() == pos_apple.x()) && (m_python->pos.y() == pos_apple.y())) {
 
-         m_python->points.push_back(m_python->points.back());
+         m_python->pointsReal.push_back(m_python->pointsReal.back());
          locateApple();
      }
  }
@@ -172,7 +172,7 @@ void Snake::initGame() {
 
  void Snake::checkCollision() {
 
-     inGame = m_python->checkCollision(m_map->getSize(), m_python->points);
+     inGame = m_python->checkCollision(m_map->getSize(), m_python->pointsReal);
 
      if(!inGame) {
          ;

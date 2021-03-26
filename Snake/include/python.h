@@ -22,12 +22,18 @@ private:
 
 public:
 
+    typedef struct pointsPathst {
+
+        vector<QPoint> Path;
+        vector<bool> pos;
+
+    } pointsPathst;
+
     python(QPoint pos);
 
-    vector<QPoint> points;
+    vector<QPoint> pointsReal;
 
-    vector<QPoint> pointsPath;
-    vector<bool>   pointsPos;
+    pointsPathst pointsPath;
 
 
     void move(QSize size, bool wall, int dtime);
