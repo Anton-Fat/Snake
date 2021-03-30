@@ -32,13 +32,13 @@ Snake::Snake(QWidget *parent)
 
     m_python_t[0] = m_python;
 
-    m_python->speed = 250;
+    m_python->speed = 100; //250;
 
     m_python_test = new python(QPoint(200,200));
 
     m_python_t[1] = m_python_test;
 
-    m_python_test->speed = 500;
+    m_python_test->speed = 250; //500;
 
     qDebug() << "Count python : " << python::count;
 

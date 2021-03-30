@@ -15,6 +15,8 @@ python::python(QPoint pos):animal(pos)
     for (int z = 0; z < dotss; z++) {
         pointsReal.push_back(QPoint(pos.x() - z * getDotSize(),
                                 pos.y()));
+        pointsPath.Path.push_back(pointsReal.back());
+        pointsPath.pos.push_back(true);
     }
 
     dot.load(":/res/images/dot_10.png");
@@ -28,57 +30,90 @@ void python::move(QSize size, bool wall, int dtime)
     int x0, y0;
 
     QPoint delta;
-    for(int i = 0; i < pointsReal.size()-1; ++i)
+
+    int i = 0;
+    bool find = false;
+
+    while( (i < pointsReal.size()-1) &&  !find)
     {
         delta = pointsReal.at(i+1) - pointsReal.at(i);
         if (delta.manhattanLength() < getDotSize())
         {
-            // insert point
-
+            find = true;
         }
-
+        ++i;
     }
 
-    pointsReal.insert(pointsReal.begin(), pointsReal.at(0));
-    pointsReal.pop_back();
+    pointsPath.Path.insert(pointsPath.Path.begin(), pointsPath.Path.at(0));
+
+    if(find) {
+        // insert point
+        int j = 0;
+        while (i != 0)
+        {
+            if(pointsPath.pos.at(j) == true)   i--;
+            j++;
+        }
+        i = j;
+        pointsPath.pos.insert(pointsPath.pos.begin()+i, false);
+
+    } else {
+        pointsPath.Path.pop_back();
+    }
+
+    //pointsReal.insert(pointsReal.begin(), pointsReal.at(0));
+    //pointsReal.pop_back();
 
     qreal scaleLen = static_cast<qreal>(speed) * dtime / 10000;
 
     //qDebug() << " dist " << QString::number(getDistanse(scaleLen));
 
     if (angle == dir_left) {
-        x0 = pointsReal.at(0).x() - getDistanse(scaleLen);
+        x0 = pointsPath.Path.at(0).x() - getDistanse(scaleLen);
         if(!wall) {
             if (x0 < 0) x0 = size.width() - getDistanse(scaleLen);
         }
-        pointsReal.at(0).setX(x0);
+        pointsPath.Path.at(0).setX(x0);
 
     }
 
     if (angle == dir_right) {
-        x0 = pointsReal.at(0).x() + getDistanse(scaleLen);
+        x0 = pointsPath.Path.at(0).x() + getDistanse(scaleLen);
         if(!wall) {
             if (x0 >= size.width()) x0 = 0;
         }
-        pointsReal.at(0).setX(x0);
+        pointsPath.Path.at(0).setX(x0);
     }
 
     if (angle == dir_up) {
-        y0 = pointsReal.at(0).y() - getDistanse(scaleLen);
+        y0 = pointsPath.Path.at(0).y() - getDistanse(scaleLen);
         if(!wall) {
             if (y0 < 0) y0 = size.height() - getDistanse(scaleLen);
         }
-        pointsReal.at(0).setY(y0);
+        pointsPath.Path.at(0).setY(y0);
     }
 
     if (angle == dir_down) {
-        y0 = pointsReal.at(0).y() + getDistanse(scaleLen);
+        y0 = pointsPath.Path.at(0).y() + getDistanse(scaleLen);
         if(!wall) {
             if (y0 >= size.height()) y0 = 0;
         }
-        pointsReal.at(0).setY(y0);
+        pointsPath.Path.at(0).setY(y0);
     }
-    pos = pointsReal.at(0);
+    pos = pointsPath.Path.at(0);
+
+
+    // only head
+    for(int j = 0, i = 0; j < pointsPath.Path.size(); ++j)
+    {
+        if (pointsPath.pos.at(j) == true)
+        {
+         pointsReal.at(i) = pointsPath.Path.at(j);
+         i++;
+        }
+    }
+
+
 }
 
 
