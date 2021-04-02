@@ -4,10 +4,23 @@
 #include <QWidget>
 #include <QPoint>
 
+
+
+using namespace std;
+
 class animal
 {
 
 public:
+
+
+    const string t_key_up {"key_up"};
+    const string t_key_down {"key_down"};
+    const string t_key_left {"key_left"};
+    const string t_key_right {"key_right"};
+
+
+    map <string, int> m_dict;
 
     static int count;
 

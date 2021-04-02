@@ -12,6 +12,8 @@
 /// \todo delete
 #include <QDebug>
 
+
+
 int Snake::fps = 50;
 
 Snake::Snake(QWidget *parent)
@@ -28,22 +30,34 @@ Snake::Snake(QWidget *parent)
         m_python_t[i] = nullptr;
     }
 
-    m_python = new python(QPoint(100,100));
 
-    m_python_t[0] = m_python;
+    std::vector<std::unique_ptr<python>> pythons;
 
-    m_python->speed = 100; //250;
 
-    m_python_test = new python(QPoint(200,200));
+    m_python_t[0] = new python(QPoint(100,100));
 
-    m_python_t[1] = m_python_test;
+    m_python_t[0]->speed = 50; //250;
 
-    m_python_test->speed = 250; //500;
+
+
+    m_python_t[0]->m_dict.insert(pair<string,int>(m_python_t[0]->t_key_up, Qt::Key_Up));
+    m_python_t[0]->m_dict.insert(pair<string,int>(m_python_t[0]->t_key_down, Qt::Key_Down));
+    m_python_t[0]->m_dict.insert(pair<string,int>(m_python_t[0]->t_key_left, Qt::Key_Left));
+    m_python_t[0]->m_dict.insert(pair<string,int>(m_python_t[0]->t_key_right, Qt::Key_Right));
+
+
+    m_python_t[1] = new python(QPoint(200,200));
+
+    m_python_t[1]->speed = 100; //500;
+
+    m_python_t[1]->m_dict.insert(pair<string,int>(m_python_t[1]->t_key_up, Qt::Key_W));
+    m_python_t[1]->m_dict.insert(pair<string,int>(m_python_t[1]->t_key_down, Qt::Key_S));
+    m_python_t[1]->m_dict.insert(pair<string,int>(m_python_t[1]->t_key_left, Qt::Key_A));
+    m_python_t[1]->m_dict.insert(pair<string,int>(m_python_t[1]->t_key_right, Qt::Key_D));
+
 
     qDebug() << "Count python : " << python::count;
 
-    qDebug() << "test " << round(2.4);
-    qDebug() << "test " << round(2.6);
 
     resize(m_map->getSize());
     loadImages();
@@ -52,11 +66,11 @@ Snake::Snake(QWidget *parent)
 
 Snake::~Snake()
 {
-    if(m_python) delete m_python;
 
+    for(int i = 0; i < python::count; ++i) {
+        if(m_python_t[i]) delete m_python_t[i];
+    }
 
-
-    if(m_python_test) delete m_python_test;
     timer->stop();
     delete timer;
 }
@@ -99,9 +113,6 @@ void Snake::initGame() {
              m_python_t[i]->draw(qp);
          }
 
-         //m_python->draw(qp);
-         //m_python_test->draw(qp);
-
          if (Pause) {
              outText(qp, "Pause");
          }
@@ -137,7 +148,7 @@ void Snake::initGame() {
      if(!Pause){
 
          delay++;
-         if (delay% 2 == 0) {
+         if (delay% 1 == 0) {
 
              if (inGame) {
 
@@ -156,11 +167,16 @@ void Snake::initGame() {
 
  void Snake::checkApple() {
 
-     if ((m_python->pos.x() == pos_apple.x()) && (m_python->pos.y() == pos_apple.y())) {
 
-         m_python->pointsReal.push_back(m_python->pointsReal.back());
-         locateApple();
+     for(int i = 0; i < python::count; ++i) {
+         if ((m_python_t[i]->pos.x() == pos_apple.x()) && (m_python_t[i]->pos.y() == pos_apple.y())) {
+
+             m_python_t[i]->pointsReal.push_back(m_python_t[i]->pointsReal.back());
+             locateApple();
+         }
      }
+
+
  }
 
  void Snake::move() {
@@ -172,8 +188,9 @@ void Snake::initGame() {
 
  void Snake::checkCollision() {
 
-     inGame = m_python->checkCollision(m_map->getSize(), m_python->pointsReal);
-
+     for(int i = 0; i < python::count; ++i) {
+     inGame = m_python_t[i]->checkCollision(m_map->getSize(), m_python_t[i]->pointsReal);
+     }
      if(!inGame) {
          ;
      }
@@ -213,8 +230,9 @@ void Snake::initGame() {
      int key = e->key();
      QPainter qp(this);
 
-     m_python->action_angle(key);
-
+     for(int i = 0; i < python::count; ++i) {
+     m_python_t[i]->action_angle(key);
+     }
      switch (e->key()) {
      case Qt::Key_Pause:
      case Qt::Key_P:

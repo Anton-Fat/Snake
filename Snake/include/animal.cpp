@@ -1,6 +1,5 @@
 #include "animal.h"
 
-using namespace std;
 
 int animal::count = 0;
 
@@ -22,19 +21,19 @@ int animal::getDistanse(float scale)
 void animal::action_angle(int key)
 {
 
-    if ((key == Qt::Key_Left) && (angle != dir_right)) {
+    if (( m_dict.find(t_key_left) != m_dict.end() ) && (key == m_dict.at(t_key_left)) && (angle != dir_right)) {
         angle = dir_left;
     }
 
-    if ((key == Qt::Key_Right) && (angle != dir_left)) {
+    if (( m_dict.find(t_key_right) != m_dict.end() ) && (key == m_dict.at(t_key_right)) && (angle != dir_left)) {
         angle = dir_right;
     }
 
-    if ((key == Qt::Key_Up) && (angle != dir_down)) {
+    if (( m_dict.find(t_key_up) != m_dict.end() ) && (key == m_dict.at(t_key_up)) && (angle != dir_down)) {
         angle = dir_up;
     }
 
-    if ((key == Qt::Key_Down) && (angle != dir_up)) {
+    if (( m_dict.find(t_key_down) != m_dict.end() ) && (key == m_dict.at(t_key_down)) && (angle != dir_up)) {
         angle = dir_down;
     }
 

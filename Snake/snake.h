@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QKeyEvent>
 
+#include <memory>
+
 #include "include/map.h"
 
 #define TIMER_LOOP
@@ -14,6 +16,7 @@ class python;
 
 //==============================================================================
 
+using namespace std;
 
 class Snake : public QWidget
 {
@@ -22,6 +25,7 @@ class Snake : public QWidget
 public:
     Snake(QWidget *parent = nullptr);
     ~Snake();
+
 
 
 
@@ -36,7 +40,7 @@ protected:
 private:
 
     static int fps;
-    static const int max_count_python {10};
+    static const int max_count_python {4};
 
     int period = 1000 / fps;
 
@@ -47,9 +51,6 @@ private:
 
 
     bool Pause {false};
-
-    python *m_python {nullptr};
-    python *m_python_test {nullptr};
 
     python *m_python_t[max_count_python]; // 444
 
