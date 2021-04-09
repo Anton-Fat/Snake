@@ -10,7 +10,7 @@ python::python(QPoint pos):animal(pos)
      // dots = 3;
     pointsReal.clear();
 
-    count++;
+
 
     for (int z = 0; z < dotss; z++) {
         pointsReal.push_back(QPoint(pos.x() - z * getDotSize(),
@@ -24,7 +24,12 @@ python::python(QPoint pos):animal(pos)
 
 
 }
+//==============================================================================
+python::~python()
+{
 
+}
+//==============================================================================
 void python::move(QSize size, bool wall, int dtime)
 {
     int x0, y0;
@@ -113,16 +118,13 @@ void python::move(QSize size, bool wall, int dtime)
         }
     }
 
-
 }
-
-
-
+//==============================================================================
 int python::getAllDots()
 {
     return all_dots;
 }
-
+//==============================================================================
 void python::draw(QPainter &qp)
 {
     for (int z = 0; z < static_cast<int>(pointsReal.size()); z++) {
@@ -133,3 +135,4 @@ void python::draw(QPainter &qp)
         }
     }
 }
+//==============================================================================

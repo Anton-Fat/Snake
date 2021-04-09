@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "include/map.h"
+#include "player.h"
 
 #define TIMER_LOOP
 
@@ -27,9 +28,12 @@ public:
     ~Snake();
 
 
+    using Ptr = std::unique_ptr<Player>;
+
+    std::vector<Ptr>::iterator getObject(string const& objName);
 
 
-    //int fps = 10;
+
     int getFps() { return fps; }
 
 protected:
@@ -53,6 +57,10 @@ private:
     bool Pause {false};
 
     python *m_python_t[max_count_python]; // 444
+
+    Player *m_player_2 {nullptr};
+
+    std::vector<std::unique_ptr<Player>> m_players;
 
     bool wall = false;
 

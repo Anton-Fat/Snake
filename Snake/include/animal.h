@@ -14,29 +14,6 @@ class animal
 public:
 
 
-    const string t_key_up {"key_up"};
-    const string t_key_down {"key_down"};
-    const string t_key_left {"key_left"};
-    const string t_key_right {"key_right"};
-
-
-    map <string, int> m_dict;
-
-    static int count;
-
-    animal(QPoint pos);
-
-    int speed = 200; //140;
-
-    QPoint pos;
-
-    int getDotSize(void);
-    int getDistanse(float scale);
-    void action_angle(int key);
-    bool checkCollision(QSize size, const std::vector<QPoint> &points);
-
-
-protected:
     enum Direction
     {
         dir_right = 0,
@@ -45,7 +22,25 @@ protected:
         dir_down = 270,
     };
 
+    static int count;
+
+    animal(QPoint pos);
+    ~animal();
+
+    int speed = 200; //140;
+
+    QPoint pos;
+
+    int getDotSize(void);
+    int getDistanse(float scale);
+    bool checkCollision(QSize size, const std::vector<QPoint> &points);
+
     Direction angle {dir_right};
+
+//protected:
+
+
+    //Direction angle {dir_right};
 
 private:
 

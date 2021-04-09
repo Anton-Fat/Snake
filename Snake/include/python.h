@@ -30,6 +30,7 @@ public:
     } pointsPathst;
 
     python(QPoint pos);
+    ~python();
 
     vector<QPoint> pointsReal;
 
