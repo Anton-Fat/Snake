@@ -6,9 +6,10 @@
 
 
 int Player::count = 0;
-
-
-
+const string Player::t_key_up = "key_up";
+const string Player::t_key_down = "key_down";
+const string Player::t_key_left = "key_left";
+const string Player::t_key_right = "key_right";
 Player::Player(string name)
 {
     _name = name;
@@ -19,13 +20,13 @@ Player::Player(string name)
 Player::~Player()
 {
 
-    if (m_python){
-        delete m_python;
-    }
+    delete m_python.release();
 
     Player::count--;
     qDebug() << "del Player -1 " << _name.c_str();
 }
+
+
 
 //==============================================================================
 void Player::action_angle(int key)
@@ -52,9 +53,11 @@ void Player::action_angle(int key)
     }
 
 }
+
 //==============================================================================
 void Player::addDict(string text, int val)
 {
+    //qDebug() << "Setup key " << text.c_str();
     m_dict.insert(pair<string,int>(text, val));
 }
 //==============================================================================

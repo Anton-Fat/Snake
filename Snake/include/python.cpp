@@ -13,10 +13,9 @@ python::python(QPoint pos):animal(pos)
 
 
     for (int z = 0; z < dotss; z++) {
-        pointsReal.push_back(QPoint(pos.x() - z * getDotSize(),
-                                pos.y()));
-        pointsPath.Path.push_back(pointsReal.back());
-        pointsPath.pos.push_back(true);
+
+        addDot(QPoint(pos.x() - z * getDotSize(),
+                      pos.y()));
     }
 
     dot.load(":/res/images/dot_10.png");
@@ -28,6 +27,13 @@ python::python(QPoint pos):animal(pos)
 python::~python()
 {
 
+}
+//==============================================================================
+void python::addDot(const QPoint &point)
+{
+    pointsReal.push_back(point);
+    pointsPath.Path.push_back(pointsReal.back());
+    pointsPath.pos.push_back(true);
 }
 //==============================================================================
 void python::move(QSize size, bool wall, int dtime)

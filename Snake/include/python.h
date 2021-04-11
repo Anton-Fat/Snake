@@ -40,6 +40,7 @@ public:
     void move(QSize size, bool wall, int dtime);
 
     int getAllDots(void);
+    void addDot(const QPoint &point);
     void draw(QPainter &qp);
 
 

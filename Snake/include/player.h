@@ -18,17 +18,24 @@ public:
 
     ~Player();
 
-    const string t_key_up {"key_up"};
-    const string t_key_down {"key_down"};
-    const string t_key_left {"key_left"};
-    const string t_key_right {"key_right"};
+    static const string t_key_up;
+    static const string t_key_down;
+    static const string t_key_left;
+    static const string t_key_right;
 
 
-    python * m_python {nullptr};
+    // python * m_python {nullptr};
+
+    std::unique_ptr<python> m_python;
 
     static int count;
 
+
+    map <string, int> m_dict;
+
     void action_angle(int key);
+
+
 
 
 
@@ -38,9 +45,11 @@ public:
 
     std::string const& name() const { return _name; }
 
+    static string getT_key_up();
+
 private:
 
-    map <string, int> m_dict;
+
 
     string _name;
 
