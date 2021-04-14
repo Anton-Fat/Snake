@@ -14,8 +14,8 @@ python::python(QPoint pos):animal(pos)
 
     for (int z = 0; z < dotss; z++) {
 
-        addDot(QPoint(pos.x() - z * getDotSize(),
-                      pos.y()));
+        //addDot(QPoint(pos.x() - z * getDotSize(), pos.y()));
+        addDot(QPoint(pos.x(), pos.y()));
     }
 
     dot.load(":/res/images/dot_10.png");
@@ -43,12 +43,16 @@ void python::move(QSize size, bool wall, int dtime)
     QPoint delta;
 
     int i = 0;
-    bool find = false;
+    bool find = false, find_zero = false;
 
-    while( (i < pointsReal.size()-1) &&  !find)
+    while( (i < pointsReal.size()-1) &&  !find && !find_zero)
     {
         delta = pointsReal.at(i+1) - pointsReal.at(i);
-        if (delta.manhattanLength() < getDotSize())
+        if (delta.isNull())
+        {
+            find_zero = true;
+        }
+        else if (delta.manhattanLength() < getDotSize())
         {
             find = true;
         }
@@ -72,12 +76,7 @@ void python::move(QSize size, bool wall, int dtime)
         pointsPath.Path.pop_back();
     }
 
-    //pointsReal.insert(pointsReal.begin(), pointsReal.at(0));
-    //pointsReal.pop_back();
-
     qreal scaleLen = static_cast<qreal>(speed) * dtime / 10000;
-
-    //qDebug() << " dist " << QString::number(getDistanse(scaleLen));
 
     if (angle == dir_left) {
         x0 = pointsPath.Path.at(0).x() - getDistanse(scaleLen);

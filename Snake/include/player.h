@@ -5,6 +5,8 @@
 
 #include "python.h"
 
+#include <memory>
+
 using namespace std;
 
 //template <class T>

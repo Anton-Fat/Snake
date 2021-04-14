@@ -15,12 +15,19 @@ class python : public animal
 {
     // ALL_DOTS
 private:
+
+
+
     static const int all_dots {900};
     QImage dot;
     QImage head;
     int dotss {3};
 
 public:
+
+    python(QPoint pos);
+    ~python();
+
 
     typedef struct pointsPathst {
 
@@ -29,8 +36,6 @@ public:
 
     } pointsPathst;
 
-    python(QPoint pos);
-    ~python();
 
     vector<QPoint> pointsReal;
 

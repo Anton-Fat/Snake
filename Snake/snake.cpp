@@ -32,14 +32,14 @@ Snake::Snake(QWidget *parent)
     gen.seed(time(0));
     inGame = true;
 
-
+    int cntSnake = 4;
 
 
     m_pythons.push_back(make_unique<python>(QPoint(100,100)));
-    m_pythons.at(0)->speed = 50; //250;
+    m_pythons.at(0)->speed = 100; //250;
 
     m_pythons.push_back(make_unique<python>(QPoint(200,200)));
-    m_pythons.at(1)->speed = 100;
+    m_pythons.at(1)->speed = 50;
 
 
     m_players.push_back(make_unique<Player>("Anton_p"));
@@ -65,11 +65,17 @@ Snake::Snake(QWidget *parent)
 
 }
 
-    m_pythons.push_back(make_unique<python>(QPoint(150,150)));
-    m_pythons.back()->speed = 50;
-    m_pythons.push_back(make_unique<python>(QPoint(250,250)));
-    m_pythons.back()->speed = 50;
-
+    if(cntSnake == 1)
+    {
+        eraseObject("Stas_p");
+    }
+    if(cntSnake > 2)
+    {
+        m_pythons.push_back(make_unique<python>(QPoint(150,150)));
+        m_pythons.back()->speed = 60;
+        m_pythons.push_back(make_unique<python>(QPoint(250,250)));
+        m_pythons.back()->speed = 70;
+    }
 
     debugShowCntObject();
 

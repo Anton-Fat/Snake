@@ -13,6 +13,9 @@ class animal
 
 public:
 
+    animal(QPoint pos);
+    ~animal();
+
 
     enum Direction
     {
@@ -24,8 +27,6 @@ public:
 
     static int count;
 
-    animal(QPoint pos);
-    ~animal();
 
     int speed = 200; //140;
 
@@ -43,6 +44,7 @@ public:
     //Direction angle {dir_right};
 
 private:
+
 
 
     int dot_size {10};
