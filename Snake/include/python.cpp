@@ -78,7 +78,7 @@ void python::move(QSize size, bool wall, int dtime)
 
     qreal scaleLen = static_cast<qreal>(speed) * dtime / 10000;
 
-    if (angle == dir_left) {
+    if (angleReal == dir_left) {
         x0 = pointsPath.Path.at(0).x() - getDistanse(scaleLen);
         if(!wall) {
             if (x0 < 0) x0 = size.width() - getDistanse(scaleLen);
@@ -87,7 +87,7 @@ void python::move(QSize size, bool wall, int dtime)
 
     }
 
-    if (angle == dir_right) {
+    if (angleReal == dir_right) {
         x0 = pointsPath.Path.at(0).x() + getDistanse(scaleLen);
         if(!wall) {
             if (x0 >= size.width()) x0 = 0;
@@ -95,7 +95,7 @@ void python::move(QSize size, bool wall, int dtime)
         pointsPath.Path.at(0).setX(x0);
     }
 
-    if (angle == dir_up) {
+    if (angleReal == dir_up) {
         y0 = pointsPath.Path.at(0).y() - getDistanse(scaleLen);
         if(!wall) {
             if (y0 < 0) y0 = size.height() - getDistanse(scaleLen);
@@ -103,7 +103,7 @@ void python::move(QSize size, bool wall, int dtime)
         pointsPath.Path.at(0).setY(y0);
     }
 
-    if (angle == dir_down) {
+    if (angleReal == dir_down) {
         y0 = pointsPath.Path.at(0).y() + getDistanse(scaleLen);
         if(!wall) {
             if (y0 >= size.height()) y0 = 0;

@@ -34,20 +34,20 @@ void Player::action_angle(int key)
 
     if(m_python){
 
-        if (( inDict(m_dict, t_key_left) ) && (key == m_dict.at(t_key_left)) && (m_python->angle != animal::dir_right)) {
-            m_python->angle = animal::dir_left;
+        if (( inDict(m_dict, t_key_left) ) && (key == m_dict.at(t_key_left))) {
+            m_python->moveAngle(animal::stepDegree);
         }
 
-        if (( inDict(m_dict, t_key_right) ) && (key == m_dict.at(t_key_right)) && (m_python->angle != animal::dir_left)) {
-            m_python->angle = animal::dir_right;
+        if (( inDict(m_dict, t_key_right) ) && (key == m_dict.at(t_key_right))) {
+            m_python->moveAngle(animal::stepDegree*-1);
         }
 
-        if (( inDict(m_dict, t_key_up) ) && (key == m_dict.at(t_key_up)) && (m_python->angle != animal::dir_down)) {
-            m_python->angle = animal::dir_up;
+        if (( inDict(m_dict, t_key_up) ) && (key == m_dict.at(t_key_up))) {
+            m_python->speed += 10;
         }
 
-        if (( inDict(m_dict, t_key_down) ) && (key == m_dict.at(t_key_down)) && (m_python->angle != animal::dir_up)) {
-            m_python->angle = animal::dir_down;
+        if (( inDict(m_dict, t_key_down) ) && (key == m_dict.at(t_key_down))) {
+            m_python->speed -= 10;
         }
 
     }

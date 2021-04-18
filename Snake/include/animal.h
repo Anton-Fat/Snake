@@ -26,6 +26,7 @@ public:
     };
 
     static int count;
+    static const int stepDegree = 90;
 
 
     int speed = 200; //140;
@@ -35,8 +36,10 @@ public:
     int getDotSize(void);
     int getDistanse(float scale);
     bool checkCollision(QSize size, const std::vector<QPoint> &points);
+    void moveAngle(int degree);
 
-    Direction angle {dir_right};
+    int angleReal {0};
+    //Direction angle {dir_right};
 
 //protected:
 

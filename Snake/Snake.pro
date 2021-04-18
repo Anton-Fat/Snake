@@ -26,10 +26,23 @@ HEADERS += \
 
 RESOURCES += \
     Res.qrc
-    # Includes =====================================================================
+# Includes =====================================================================
 
-    INCLUDEPATH += \
-        $${PWD}/include \
+INCLUDEPATH += \
+        /usr/include/SFML/include \
+        $${PWD}/include
+DEPENDPATH += \
+        /usr/include/SFML/include
+# Libs =========================================================================
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/SFML/lib/ -lsfml-audio \
+-lsfml-graphics -lsfml-network -lsfml-window -lsfml-system
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/SFML/lib/ -lsfml-audio-d \
+-lsfml-graphics-d -lsfml-network-d -lsfml-window-d -lsfml-system-d
+else:unix: LIBS += \
+        -lsfml-audio \
+        -lsfml-graphics -lsfml-network -lsfml-window -lsfml-system
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

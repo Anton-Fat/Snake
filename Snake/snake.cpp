@@ -86,16 +86,7 @@ Snake::Snake(QWidget *parent)
 
 Snake::~Snake()
 {
-
-
     m_pythons.clear();
-    //for (auto &m_python_o : m_python) {
-    //    delete m_python;
-    //}
-
-//    for(int i = 0; i < max_count_python; ++i) { // python::count
-//        if(m_python_t[i]) delete m_python_t[i];
-//    }
 
     timer->stop();
     delete timer;
@@ -236,8 +227,6 @@ void Snake::updateTime()
 
             }
         }
-
-
     }
     repaint();
 
@@ -315,9 +304,6 @@ void Snake::keyPressEvent(QKeyEvent *e) {
     QPainter qp(this);
 
 #ifdef OUT_TIME
-    //QElapsedTimer timer;
-    //timer.start();
-
     std::chrono::duration<double> durInsertTime(0);
     auto tp1 = std::chrono::high_resolution_clock::now();
 #endif
@@ -337,8 +323,6 @@ void Snake::keyPressEvent(QKeyEvent *e) {
     durInsertTime = (tp2 - tp1);
     qDebug() << "Operation time vector took " <<
                 std::chrono::duration_cast<std::chrono::microseconds>(durInsertTime).count() << "us\n";
-
-    //qDebug() << "The slow operation took " << timer.elapsed() << " milliseconds";
 #endif
 
 

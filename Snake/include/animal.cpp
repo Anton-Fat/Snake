@@ -5,6 +5,7 @@
 
 int animal::count = 0;
 
+
 animal::animal(QPoint pos)
 {
     this->pos = pos;
@@ -45,5 +46,12 @@ bool animal::checkCollision(QSize size, const vector<QPoint> &points)
     }
 
     return true;
+}
+//==============================================================================
+void animal::moveAngle(int degree)
+{
+    angleReal += degree;
+    if (angleReal >= 360) angleReal -= 360;
+    if (angleReal < 0) angleReal += 360;
 }
 //==============================================================================
